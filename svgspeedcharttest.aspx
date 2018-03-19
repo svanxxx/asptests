@@ -8,7 +8,7 @@
 	<script>
 		var source = new EventSource("data.ashx");
 		source.onmessage = function (e) {
-			update(JSON.parse(event.data));
+			update(JSON.parse(e.data));
 		}
 		function update(data) {	
 			var lab = document.getElementById('label');
@@ -53,7 +53,7 @@
 	<form id="form1" runat="server">
 		<b id="label"></b>
 		<br />
-		<svg id="svg" width="1000" height="600" style="border: 1px solid #000000;">
+		<svg id="svg" width="1000" height="600" style="width:1000px; height:600px; border: 1px solid #000000;">
 			<polyline id="polyline1" points="" style="fill: none; stroke: black; stroke-width: 1" />
 			<polyline id="polyline2" points="" style="fill: none; stroke: red; stroke-width: 1" />
 			<polyline id="polyline3" points="" style="fill: none; stroke: green; stroke-width: 1" />
