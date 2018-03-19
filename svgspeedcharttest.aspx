@@ -13,8 +13,8 @@
 		function update(data) {	
 			var lab = document.getElementById('label');
 			var svg = document.getElementById('svg');
-			var h = svg.clientHeight;
-			var w = svg.clientWidth;
+			var w = svg.clientWidth || svg.parentNode.clientWidth;
+			var h = svg.clientHeight || svg.parentNode.clientHeight;
 
 			for (var line = 0; line < 9; line++) {
 				var polyline = document.getElementById('polyline' + (line + 1));
