@@ -6,32 +6,47 @@
 <head runat="server">
 	<title>svg performance test</title>
 	<script>
-		function timer(pindex) {
+		var source = new EventSource("data.ashx");
+		source.onmessage = function (e) {
+			update(JSON.parse(event.data));
+		}
+		function update(data) {	
+			var lab = document.getElementById('label');
 			var svg = document.getElementById('svg');
 			var h = svg.clientHeight;
 			var w = svg.clientWidth;
 
-			var polyline = document.getElementById('polyline' + pindex);
-			var pts = polyline.points;
-			var maxlength = 5000;
-			var addpertime = 100;
-			var excess = pts.length + addpertime - maxlength;
-			while (excess-- > 0) {
-				pts.removeItem(0);
+			for (var line = 0; line < 9; line++) {
+				var polyline = document.getElementById('polyline' + (line + 1));
+				var pts = polyline.points;
+				var maxlength = 5000;
+				var addpertime = data.length;
+				var excess = pts.length + addpertime - maxlength;
+				while (excess-- > 0) {
+					pts.removeItem(0);
+				}
+				for (var i = 0; i < addpertime; i++) {
+					var point = svg.createSVGPoint();
+					point.x = 1;
+					var y = data[i].y1;
+					if (line == 1) { y = data[i].y2; }
+					else if (line == 2) { y = data[i].y3; }
+					else if (line == 3) { y = data[i].y4; }
+					else if (line == 4) { y = data[i].y5; }
+					else if (line == 5) { y = data[i].y6; }
+					else if (line == 6) { y = data[i].y7; }
+					else if (line == 7) { y = data[i].y8; }
+					else if (line == 8) { y = data[i].y9; }
+
+					point.y = ((line) / 10 + 0.1 * y) * h;
+					pts.appendItem(point);
+				}
+				for (var i = 0; i < pts.length; i++) {
+					pts[i].x = w * i / (pts.length - 1);
+				}
+				lab.textContent = "Points loaded: " + pts.length;
 			}
-			for (var i = 0; i < addpertime; i++) {
-				var point = svg.createSVGPoint();
-				point.x = 1;
-				point.y = ((pindex - 1) / 10 + 0.1 * Math.random()) * h;
-				pts.appendItem(point);
-			}
-			for (var i = 0; i < pts.length; i++) {
-				pts[i].x = w * i / (pts.length - 1);
-			}
-			var lab = document.getElementById('label');
-			lab.textContent = "Number of points: " + pts.length + " updated each 0.25 sec.";
 		}
-		setInterval(function () { for (var i = 1; i <= 9; i++) { timer(i) } }, 250);
 	</script>
 </head>
 <body>
